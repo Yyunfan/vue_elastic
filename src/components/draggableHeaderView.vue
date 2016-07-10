@@ -5,6 +5,7 @@
     @mouseup="stopDrag" @touchend="stopDrag" @mouseleave="stopDrag">
     <div class="content smx" id="newAm">
       <img src="../assets/mn.jpg" style="display:block;width:100%;"/>
+      <span class="down-am"></span>
     </div>
     <svg class="bg" width="320" height="560">
       <path :d="headerPath" fill="#2d2b38"></path>
@@ -22,16 +23,16 @@
       return {
         dragging: false,
         // quadratic bezier control point
-        c: { x: 160, y: 160 },
+        c: { x: 160, y: 150 },
         // record drag start point
         start: { x: 0, y: 0 }
       }
     },
     computed: {
       headerPath: function () {
-        return 'M0,0 L320,0 320,120' +
+        return 'M0,227 L320,227 320,0' +
           'Q' + this.c.x + ',' + this.c.y +
-          ' 0,120'
+          ' 0,0'
       },
       contentPosition: function () {
         var dy = this.c.y - 160
@@ -42,19 +43,6 @@
       }
     },
     methods: {
-      // newAm () {
-      //   const el = document.querySelector('#newAm')
-      //   dynamics.animate(el, {
-      //     translateX: 350,
-      //     scale: 2,
-      //     opacity: 0.5
-      //   }, {
-      //     type: dynamics.spring,
-      //     frequency: 200,
-      //     friction: 200,
-      //     duration: 1500
-      //   })
-      // },
       startDrag: function (e) {
         e = e.changedTouches ? e.changedTouches[0] : e
         this.dragging = true
@@ -64,19 +52,19 @@
       onDrag: function (e) {
         e = e.changedTouches ? e.changedTouches[0] : e
         if (this.dragging) {
-          this.c.x = 120 + (e.pageX - this.start.x)
+          this.c.x = 160 + (e.pageX - this.start.x)
           // dampen vertical drag by a factor
           var dy = e.pageY - this.start.y
           var dampen = dy > 0 ? 1.5 : 4
-          this.c.y = 0 + dy / dampen
+          this.c.y = 160 + dy / dampen
         }
       },
       stopDrag: function () {
         if (this.dragging) {
           this.dragging = false
           dynamics.animate(this.c, {
-            x: 120,
-            y: 120
+            x: 160,
+            y: 150
           }, {
             type: dynamics.spring,
             duration: 700,
@@ -134,6 +122,17 @@
     line-height: 1.5em;
   }
   .smx {
-    padding: 5px !important;
+    padding: 0 !important;
+  }
+  .down-am {
+    position: absolute;
+    width: 60px;
+    height: 71px;
+    background: url(../assets/down.png) no-repeat center;
+    background-size: contain;
+    left: 10px;
+    bottom: -60px;
+    z-index: 999;
+    color: #813bb6;
   }
 </style>
